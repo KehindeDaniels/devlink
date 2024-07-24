@@ -1,5 +1,5 @@
-import Header from "@/components/Header";
-import { ReactNode } from "react";
+// src/layouts/MainLayout.tsx
+import React, { ReactNode } from "react";
 
 interface MainLayoutProps {
   children: ReactNode;
@@ -8,10 +8,7 @@ interface MainLayoutProps {
 const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   return (
     <div className="bg-gray-border h-screen">
-      <div className="p-6">
-        <Header />
-      </div>
-      <main className=" ">{children}</main>
+      <main>{children}</main>
     </div>
   );
 };

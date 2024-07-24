@@ -14,7 +14,3 @@ a {
   text-decoration: none;
   color: inherit;
 }
-
-.container {
-  @apply mx-auto px-4;
-}

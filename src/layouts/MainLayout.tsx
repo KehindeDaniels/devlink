@@ -7,7 +7,7 @@ interface MainLayoutProps {
 
 const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   return (
-    <div className="bg-gray-border ">
+    <div className="bg-gray-border h-screen">
       <div className="p-6">
         <Header />
       </div>

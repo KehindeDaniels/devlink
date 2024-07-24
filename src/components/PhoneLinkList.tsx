@@ -1,24 +1,14 @@
+// src/components/PhoneLinkList.tsx
 import React from "react";
-import { FiLink } from "react-icons/fi";
 
-interface Link {
-  id: string;
-  platform: string;
-  url: string;
-}
-
-const PhoneLinkList: React.FC<{ links: Link[] }> = ({ links }) => {
+const PhoneLinkList: React.FC<{
+  links: { id: string; platform: string; url: string }[];
+}> = ({ links }) => {
   return (
-    <div className="phone-link-list flex flex-col space-y-4">
+    <div className="flex flex-col space-y-4">
       {links.map((link) => (
-        <div
-          key={link.id}
-          className="link-card flex items-center justify-between p-2 border rounded-md"
-        >
-          <div className="flex items-center">
-            <FiLink className="text-gray-500 mr-2" />
-            <span>{link.platform}</span>
-          </div>
+        <div key={link.id} className="bg-gray-200 rounded-md p-2">
+          <div className="text-sm font-medium">{link.platform}</div>
           <a
             href={link.url}
             target="_blank"

@@ -1,21 +1,24 @@
+// src/components/PanelLinkList.tsx
 import React from "react";
-import LinkCard from "./LinkCard";
-import EmptyStatePanel from "./EmptyStatePanel";
+import LinkForm from "./LinkForm";
 
-interface Link {
-  id: string;
-  platform: string;
-  url: string;
-}
-
-const PanelLinkList: React.FC<{ links: Link[] }> = ({ links }) => {
+const PanelLinkList: React.FC<{
+  links: { id: string; platform: string; url: string }[];
+  onPlatformChange: (id: string, platform: string) => void;
+  onUrlChange: (id: string, url: string) => void;
+  onRemove: (id: string) => void;
+}> = ({ links, onPlatformChange, onUrlChange, onRemove }) => {
   return (
-    <div className="panel-link-list flex flex-col space-y-4">
-      {links.length === 0 ? (
-        <EmptyStatePanel />
-      ) : (
-        links.map((link) => <LinkCard key={link.id} {...link} />)
-      )}
+    <div className="space-y-4">
+      {links.map((link) => (
+        <LinkForm
+          key={link.id}
+          link={link}
+          onPlatformChange={onPlatformChange}
+          onUrlChange={onUrlChange}
+          onRemove={onRemove}
+        />
+      ))}
     </div>
   );
 };

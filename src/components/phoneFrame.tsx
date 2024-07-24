@@ -3,7 +3,7 @@ import React from "react";
 
 const PhoneFrame: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
-    <div className="phone-frame relative flex flex-col items-center p-4 ">
+    <div className="phone-frame relative flex flex-col items-center p-4 h-full">
       <svg
         width="308"
         height="631"
@@ -21,7 +21,7 @@ const PhoneFrame: React.FC<{ children: React.ReactNode }> = ({ children }) => {
           stroke="#737373"
         />
       </svg>
-      <div className="phone-content absolute inset-0  w-full p-4">
+      <div className="phone-content absolute inset-0 w-full h-full p-4 flex flex-col justify-center items-center">
         {children}
       </div>
     </div>

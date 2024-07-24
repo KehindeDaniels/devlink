@@ -1,14 +1,18 @@
 // src/pages/_app.tsx
-import "../styles/globals.css";
+import React from "react";
 import { AppProps } from "next/app";
-import MainLayout from "../layouts/MainLayout";
+import { ProfileProvider } from "@/context/ProfileContext";
+import MainLayout from "@/layouts/MainLayout";
+import "@/styles/globals.css";
 
-function MyApp({ Component, pageProps }: AppProps) {
+const MyApp = ({ Component, pageProps }: AppProps) => {
   return (
-    <MainLayout>
-      <Component {...pageProps} />
-    </MainLayout>
+    <ProfileProvider>
+      <MainLayout>
+        <Component {...pageProps} />
+      </MainLayout>
+    </ProfileProvider>
   );
-}
+};
 
 export default MyApp;

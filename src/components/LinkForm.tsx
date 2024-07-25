@@ -160,7 +160,7 @@ const LinkForm: React.FC<LinkFormProps> = ({
           onChange={handleUrlChange}
           placeholder="e.g. https://www.example.com"
           className={`bg-white border rounded-md px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-purple focus:border-transparent ${
-            errors[link.id] ? "border-red-500" : "border-gray-300"
+            errors[link.id] ? "border-red" : "border-gray-300"
           }`}
         />
         {errors[link.id] && (

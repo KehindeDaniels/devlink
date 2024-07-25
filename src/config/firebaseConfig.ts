@@ -1,10 +1,8 @@
-// Import the functions you need from the SDKs you need
+// src/config/firebaseConfig.ts
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
-// Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyBcT51FvZ3YLge0I15d-4HZml_apprZ1cI",
   authDomain: "devlink-c5f8f.firebaseapp.com",
@@ -17,8 +15,18 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
 const auth = getAuth(app);
 const firestore = getFirestore(app);
 
-export { app, analytics, auth, firestore };
+// Conditionally import and initialize analytics
+if (typeof window !== "undefined") {
+  import("firebase/analytics")
+    .then(({ getAnalytics }) => {
+      getAnalytics(app);
+    })
+    .catch((err) => {
+      console.error("Firebase analytics initialization failed", err);
+    });
+}
+
+export { app, auth, firestore };

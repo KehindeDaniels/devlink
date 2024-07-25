@@ -1,20 +1,37 @@
 import React, { useState } from "react";
 import { useRouter } from "next/router";
-import { signInWithPopup } from "firebase/auth";
-import { auth, googleProvider } from "../config/firebaseConfig"; // Updated import
-import { FcGoogle } from "react-icons/fc";
+import { createUserWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+import { auth, googleProvider } from "../config/firebaseConfig";
+import Link from "next/link";
 
 const SignUpPage: React.FC = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const router = useRouter();
 
-  const handleGoogleSignUp = async () => {
+  const handleSignUp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (password !== confirmPassword) {
+      setError("Passwords do not match.");
+      return;
+    }
+    try {
+      await createUserWithEmailAndPassword(auth, email, password);
+      router.push("/profile");
+    } catch (err: any) {
+      setError(err.message || "Failed to create an account. Please try again.");
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
     try {
       await signInWithPopup(auth, googleProvider);
       router.push("/profile");
     } catch (err: any) {
       setError(
-        err.message || "Failed to sign up with Google. Please try again."
+        err.message || "Failed to sign in with Google. Please try again."
       );
     }
   };
@@ -23,16 +40,19 @@ const SignUpPage: React.FC = () => {
     <div className="min-h-screen flex flex-col justify-center items-center bg-gray-100">
       <div className="max-w-md w-full bg-white shadow-md rounded-lg p-8">
         <h2 className="text-2xl font-bold text-center mb-6">Create account</h2>
-        <form>
+        <form onSubmit={handleSignUp}>
           <div className="mb-4">
             <label className="block text-gray-700 text-sm font-bold mb-2">
               Email address
             </label>
             <input
               type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              placeholder="We are sorry, login with email is unavailable at the moment"
+              placeholder="Sorry, email sign up is currently unavailable. Please use Google."
               disabled
+              required
             />
           </div>
           <div className="mb-4">
@@ -41,9 +61,12 @@ const SignUpPage: React.FC = () => {
             </label>
             <input
               type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              placeholder="Please use your Google account to sign up"
+              placeholder="Please sign up using Google"
               disabled
+              required
             />
           </div>
           <div className="mb-6">
@@ -52,19 +75,21 @@ const SignUpPage: React.FC = () => {
             </label>
             <input
               type="password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              placeholder="Sign up with Google for a seamless experience"
+              placeholder="Please sign up using Google"
               disabled
+              required
             />
           </div>
-          {error && <p className="text-red text-xs italic mb-4">{error}</p>}
+          {error && <p className="text-red-500 text-xs italic mb-4">{error}</p>}
           <div className="flex items-center justify-between">
             <button
               type="button"
-              onClick={handleGoogleSignUp}
-              className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline flex items-center justify-center w-full"
+              onClick={handleGoogleSignIn}
+              className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             >
-              <FcGoogle className="mr-2" />
               Sign up with Google
             </button>
           </div>
@@ -72,12 +97,12 @@ const SignUpPage: React.FC = () => {
         <div className="mt-6 text-center">
           <p>
             Already have an account?{" "}
-            <a
+            <Link
               href="/login"
               className="text-purple-600 hover:text-purple-700 font-bold"
             >
               Login
-            </a>
+            </Link>
           </p>
         </div>
       </div>

@@ -117,7 +117,9 @@ const LinkForm: React.FC<LinkFormProps> = ({
                 link.platform.startsWith("custom:") ? "custom" : link.platform
               }
               onChange={handlePlatformChange}
-              className="appearance-none bg-white border border-gray-300 rounded-md pl-10 pr-8 py-2 w-full focus:outline-none focus:ring-2 focus:ring-purple focus:border-transparent"
+              className={`appearance-none bg-white border rounded-md pl-10 pr-8 py-2 w-full focus:outline-none focus:ring-2 focus:ring-purple focus:border-transparent ${
+                errors[link.id] ? "border-red-500" : "border-gray-300"
+              }`}
             >
               {platforms.map((platform) => (
                 <option
@@ -140,7 +142,9 @@ const LinkForm: React.FC<LinkFormProps> = ({
               value={customPlatform}
               onChange={handleCustomPlatformChange}
               placeholder="e.g. My Blog"
-              className="bg-white border border-gray-300 rounded-md px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-purple focus:border-transparent"
+              className={`bg-white border rounded-md px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-purple focus:border-transparent ${
+                errors[link.id] ? "border-red-500" : "border-gray-300"
+              }`}
               onBlur={() =>
                 onPlatformChange(link.id, `custom:${customPlatform}`)
               }
@@ -156,7 +160,7 @@ const LinkForm: React.FC<LinkFormProps> = ({
           onChange={handleUrlChange}
           placeholder="e.g. https://www.example.com"
           className={`bg-white border rounded-md px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-purple focus:border-transparent ${
-            errors[link.id] ? "border-red-500" : "border-gray-300"
+            errors[link.id] ? "border-red" : "border-gray-300"
           }`}
         />
         {errors[link.id] && (

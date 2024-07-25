@@ -51,7 +51,7 @@ const ProfilePage = () => {
           Add your details to create a personal touch to your profile.
         </p>
         <div className="flex flex-col md:flex-row items-center md:items-start">
-          <div className="md:w-1/2 mb-4 md:mb-0 md:mr-4">
+          <div className="hidden md:block md:w-1/2 mb-4 md:mb-0 md:mr-4">
             <PhoneFrame>
               {isProfileEmpty ? (
                 <ProfileSkeleton />

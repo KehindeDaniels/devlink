@@ -34,8 +34,8 @@ interface LinkFormProps {
   onPlatformChange: (id: string, platform: string) => void;
   onUrlChange: (id: string, url: string) => void;
   onRemove: (id: string) => void;
-  isDuplicate: (url: string) => boolean;
   showError: (id: string, error: string) => void;
+  errors: { [key: string]: string };
 }
 
 const LinkForm: React.FC<LinkFormProps> = ({
@@ -43,15 +43,14 @@ const LinkForm: React.FC<LinkFormProps> = ({
   onPlatformChange,
   onUrlChange,
   onRemove,
-  isDuplicate,
   showError,
+  errors,
 }) => {
   const [customPlatform, setCustomPlatform] = useState(
     link.platform.startsWith("custom:")
       ? link.platform.replace("custom:", "")
       : ""
   );
-  const [urlError, setUrlError] = useState("");
 
   useEffect(() => {
     if (link.platform.startsWith("custom:")) {
@@ -80,14 +79,11 @@ const LinkForm: React.FC<LinkFormProps> = ({
   const handleUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
     onUrlChange(link.id, value);
-    if (!isValidUrl(value)) {
-      setUrlError("Please enter a valid URL");
-      showError(link.id, "Please enter a valid URL");
-    } else if (isDuplicate(value)) {
-      setUrlError("Duplicate URL detected");
-      showError(link.id, "Duplicate URL detected");
+    if (!value) {
+      showError(link.id, "Can't be empty");
+    } else if (!isValidUrl(value)) {
+      showError(link.id, "Please check the URL");
     } else {
-      setUrlError("");
       showError(link.id, "");
     }
   };
@@ -160,10 +156,12 @@ const LinkForm: React.FC<LinkFormProps> = ({
           onChange={handleUrlChange}
           placeholder="e.g. https://www.example.com"
           className={`bg-white border rounded-md px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-purple focus:border-transparent ${
-            urlError ? "border-red-500" : "border-gray-300"
+            errors[link.id] ? "border-red-500" : "border-gray-300"
           }`}
         />
-        {urlError && <p className="text-red-500 text-sm">{urlError}</p>}
+        {errors[link.id] && (
+          <p className="text-red-500 text-sm">{errors[link.id]}</p>
+        )}
       </div>
     </div>
   );

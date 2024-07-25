@@ -103,6 +103,7 @@ const HomePage = () => {
               onRemove={removeLink}
               isDuplicate={isDuplicate}
               showError={showError}
+              errors={errors}
             />
           )}
         </div>

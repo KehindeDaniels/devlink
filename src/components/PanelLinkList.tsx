@@ -6,7 +6,6 @@ interface PanelLinkListProps {
   onPlatformChange: (id: string, platform: string) => void;
   onUrlChange: (id: string, url: string) => void;
   onRemove: (id: string) => void;
-  isDuplicate: (url: string) => boolean;
   showError: (id: string, error: string) => void;
   errors: { [key: string]: string };
 }
@@ -16,7 +15,6 @@ const PanelLinkList: React.FC<PanelLinkListProps> = ({
   onPlatformChange,
   onUrlChange,
   onRemove,
-  isDuplicate,
   showError,
   errors,
 }) => {
@@ -29,7 +27,6 @@ const PanelLinkList: React.FC<PanelLinkListProps> = ({
           onPlatformChange={onPlatformChange}
           onUrlChange={onUrlChange}
           onRemove={onRemove}
-          isDuplicate={isDuplicate}
           showError={showError}
           errors={errors}
         />

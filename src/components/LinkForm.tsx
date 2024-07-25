@@ -34,6 +34,8 @@ interface LinkFormProps {
   onPlatformChange: (id: string, platform: string) => void;
   onUrlChange: (id: string, url: string) => void;
   onRemove: (id: string) => void;
+  isDuplicate: (url: string) => boolean;
+  showError: (id: string, error: string) => void;
 }
 
 const LinkForm: React.FC<LinkFormProps> = ({
@@ -41,12 +43,15 @@ const LinkForm: React.FC<LinkFormProps> = ({
   onPlatformChange,
   onUrlChange,
   onRemove,
+  isDuplicate,
+  showError,
 }) => {
   const [customPlatform, setCustomPlatform] = useState(
     link.platform.startsWith("custom:")
       ? link.platform.replace("custom:", "")
       : ""
   );
+  const [urlError, setUrlError] = useState("");
 
   useEffect(() => {
     if (link.platform.startsWith("custom:")) {
@@ -70,6 +75,30 @@ const LinkForm: React.FC<LinkFormProps> = ({
     const { value } = e.target;
     setCustomPlatform(value);
     onPlatformChange(link.id, `custom:${value}`);
+  };
+
+  const handleUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    onUrlChange(link.id, value);
+    if (!isValidUrl(value)) {
+      setUrlError("Please enter a valid URL");
+      showError(link.id, "Please enter a valid URL");
+    } else if (isDuplicate(value)) {
+      setUrlError("Duplicate URL detected");
+      showError(link.id, "Duplicate URL detected");
+    } else {
+      setUrlError("");
+      showError(link.id, "");
+    }
+  };
+
+  const isValidUrl = (url: string) => {
+    try {
+      new URL(url);
+      return true;
+    } catch {
+      return false;
+    }
   };
 
   return (
@@ -116,6 +145,9 @@ const LinkForm: React.FC<LinkFormProps> = ({
               onChange={handleCustomPlatformChange}
               placeholder="e.g. My Blog"
               className="bg-white border border-gray-300 rounded-md px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-purple focus:border-transparent"
+              onBlur={() =>
+                onPlatformChange(link.id, `custom:${customPlatform}`)
+              }
             />
           </div>
         )}
@@ -125,10 +157,13 @@ const LinkForm: React.FC<LinkFormProps> = ({
         <input
           type="url"
           value={link.url}
-          onChange={(e) => onUrlChange(link.id, e.target.value)}
+          onChange={handleUrlChange}
           placeholder="e.g. https://www.example.com"
-          className="bg-white border border-gray-300 rounded-md px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-purple focus:border-transparent"
+          className={`bg-white border rounded-md px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-purple focus:border-transparent ${
+            urlError ? "border-red-500" : "border-gray-300"
+          }`}
         />
+        {urlError && <p className="text-red-500 text-sm">{urlError}</p>}
       </div>
     </div>
   );

@@ -1,4 +1,3 @@
-// src/components/PanelLinkList.tsx
 import React from "react";
 import LinkForm from "./LinkForm";
 
@@ -7,7 +6,16 @@ const PanelLinkList: React.FC<{
   onPlatformChange: (id: string, platform: string) => void;
   onUrlChange: (id: string, url: string) => void;
   onRemove: (id: string) => void;
-}> = ({ links, onPlatformChange, onUrlChange, onRemove }) => {
+  isDuplicate: (url: string) => boolean;
+  showError: (id: string, error: string) => void;
+}> = ({
+  links,
+  onPlatformChange,
+  onUrlChange,
+  onRemove,
+  isDuplicate,
+  showError,
+}) => {
   return (
     <div className="space-y-4">
       {links.map((link) => (
@@ -17,6 +25,8 @@ const PanelLinkList: React.FC<{
           onPlatformChange={onPlatformChange}
           onUrlChange={onUrlChange}
           onRemove={onRemove}
+          isDuplicate={isDuplicate}
+          showError={showError}
         />
       ))}
     </div>

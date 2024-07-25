@@ -92,18 +92,26 @@ export const ProfileProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
-  const updateLinkPlatform = (id: string, platform: string) => {
+  const updateLinkPlatform = async (id: string, platform: string) => {
     const updatedLinks = links.map((link) =>
       link.id === id ? { ...link, platform } : link
     );
     setLinks(updatedLinks);
+    if (auth.currentUser) {
+      const linksRef = doc(firestore, "links", auth.currentUser.uid);
+      await updateDoc(linksRef, { links: updatedLinks });
+    }
   };
 
-  const updateLinkUrl = (id: string, url: string) => {
+  const updateLinkUrl = async (id: string, url: string) => {
     const updatedLinks = links.map((link) =>
       link.id === id ? { ...link, url } : link
     );
     setLinks(updatedLinks);
+    if (auth.currentUser) {
+      const linksRef = doc(firestore, "links", auth.currentUser.uid);
+      await updateDoc(linksRef, { links: updatedLinks });
+    }
   };
 
   const removeLink = async (id: string) => {

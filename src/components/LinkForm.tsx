@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   FiLink,
   FiGithub,
@@ -34,14 +34,22 @@ const LinkForm: React.FC<LinkFormProps> = ({
   onRemove,
 }) => {
   const [customPlatform, setCustomPlatform] = useState(
-    link.platform === "custom" ? link.platform : ""
+    link.platform.startsWith("custom:")
+      ? link.platform.replace("custom:", "")
+      : ""
   );
+
+  useEffect(() => {
+    if (link.platform.startsWith("custom:")) {
+      setCustomPlatform(link.platform.replace("custom:", ""));
+    }
+  }, [link.platform]);
 
   const handlePlatformChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const { value } = e.target;
     if (value === "custom") {
       setCustomPlatform("");
-      onPlatformChange(link.id, "custom");
+      onPlatformChange(link.id, "custom:");
     } else {
       onPlatformChange(link.id, value);
     }
@@ -52,10 +60,7 @@ const LinkForm: React.FC<LinkFormProps> = ({
   ) => {
     const { value } = e.target;
     setCustomPlatform(value);
-  };
-
-  const handleCustomPlatformBlur = () => {
-    onPlatformChange(link.id, customPlatform);
+    onPlatformChange(link.id, `custom:${value}`);
   };
 
   return (
@@ -74,7 +79,9 @@ const LinkForm: React.FC<LinkFormProps> = ({
               {platformIcons[link.platform] || <FiLink />}
             </div>
             <select
-              value={link.platform}
+              value={
+                link.platform.startsWith("custom:") ? "custom" : link.platform
+              }
               onChange={handlePlatformChange}
               className="appearance-none bg-white border border-gray-300 rounded-md pl-10 pr-8 py-2 w-full"
             >
@@ -87,14 +94,13 @@ const LinkForm: React.FC<LinkFormProps> = ({
             <FiChevronDown className="absolute top-1/2 right-2 transform -translate-y-1/2 text-purple" />
           </div>
         </div>
-        {link.platform === "custom" && (
+        {link.platform.startsWith("custom:") && (
           <div className="mt-2">
             <label className="mb-1 text-gray-700">Custom Platform</label>
             <input
               type="text"
               value={customPlatform}
               onChange={handleCustomPlatformChange}
-              onBlur={handleCustomPlatformBlur}
               placeholder="e.g. My Blog"
               className="bg-white border border-gray-300 rounded-md px-3 py-2 w-full"
             />

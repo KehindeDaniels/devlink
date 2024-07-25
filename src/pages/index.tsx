@@ -1,7 +1,7 @@
 // src/pages/index.tsx
 import React, { useState } from "react";
 import AddLinkButton from "@/components/AddLinkButton";
-import PhoneFrame from "@/components/PhoneFrame";
+import PhoneFrame from "@/components/phoneFrame";
 import PanelLinkList from "@/components/PanelLinkList";
 import PhoneLinkList from "@/components/PhoneLinkList";
 import EmptyStatePanel from "@/components/EmptyStatePanel";

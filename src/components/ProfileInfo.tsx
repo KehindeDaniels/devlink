@@ -14,6 +14,9 @@ interface ProfileInfoProps {
 
 // ProfileInfo Component
 const ProfileInfo: React.FC<ProfileInfoProps> = ({ profile }) => {
+  const placeholderName = "Your Name";
+  const placeholderEmail = "youremail@example.com";
+
   return (
     <div className="flex flex-col items-center">
       {profile.profilePicture ? (
@@ -25,8 +28,10 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({ profile }) => {
       ) : (
         <div className="bg-gray-300 w-16 h-16 rounded-full mb-2"></div>
       )}
-      <div className="text-lg font-bold">{`${profile.firstName} ${profile.lastName}`}</div>
-      <div className="text-gray-500">{profile.email}</div>
+      <div className="text-lg font-bold">
+        {`${profile.firstName || placeholderName} ${profile.lastName || ""}`}
+      </div>
+      <div className="text-gray-500">{profile.email || placeholderEmail}</div>
     </div>
   );
 };

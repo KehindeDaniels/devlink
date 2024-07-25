@@ -1,11 +1,11 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState } from "react";
 
 // Define the shape of the profile data
 interface Profile {
   firstName: string;
   lastName: string;
   email: string;
-  profilePicture: string; // update this line from `image` to `profilePicture`
+  profilePicture: string;
 }
 
 interface Link {
@@ -16,10 +16,11 @@ interface Link {
 
 interface ProfileContextType {
   profile: Profile;
-  links: Link[];
   updateProfile: (profile: Partial<Profile>) => void;
+  links: Link[];
   addLink: (link: Link) => void;
-  updateLink: (id: string, updatedLink: Partial<Link>) => void;
+  updateLinkPlatform: (id: string, platform: string) => void;
+  updateLinkUrl: (id: string, url: string) => void;
   removeLink: (id: string) => void;
 }
 
@@ -53,11 +54,15 @@ export const ProfileProvider: React.FC<{ children: React.ReactNode }> = ({
     setLinks((prevLinks) => [...prevLinks, link]);
   };
 
-  const updateLink = (id: string, updatedLink: Partial<Link>) => {
+  const updateLinkPlatform = (id: string, platform: string) => {
     setLinks((prevLinks) =>
-      prevLinks.map((link) =>
-        link.id === id ? { ...link, ...updatedLink } : link
-      )
+      prevLinks.map((link) => (link.id === id ? { ...link, platform } : link))
+    );
+  };
+
+  const updateLinkUrl = (id: string, url: string) => {
+    setLinks((prevLinks) =>
+      prevLinks.map((link) => (link.id === id ? { ...link, url } : link))
     );
   };
 
@@ -67,7 +72,15 @@ export const ProfileProvider: React.FC<{ children: React.ReactNode }> = ({
 
   return (
     <ProfileContext.Provider
-      value={{ profile, links, updateProfile, addLink, updateLink, removeLink }}
+      value={{
+        profile,
+        updateProfile,
+        links,
+        addLink,
+        updateLinkPlatform,
+        updateLinkUrl,
+        removeLink,
+      }}
     >
       {children}
     </ProfileContext.Provider>

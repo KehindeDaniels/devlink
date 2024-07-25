@@ -1,23 +1,21 @@
 import React, { useState } from "react";
 import { useProfile } from "@/context/ProfileContext";
 import Image from "next/image";
-import PhoneFrame from "@/components/phoneFrame";
-import ProfileInfo from "@/components/ProfileInfo";
-import ProfileSkeleton from "@/components/ProfileSkeleton";
-import LinkSkeleton from "@/components/LinkSkeleton";
+import MainLayout from "@/layouts/MainLayout";
+import PhoneFrame from "@/components/PhoneFrame";
 import PhoneLinkList from "@/components/PhoneLinkList";
+import ProfileSkeleton from "@/components/ProfileSkeleton";
+import ProfileInfo from "@/components/ProfileInfo";
+import LinkSkeleton from "@/components/LinkSkeleton";
 
 const ProfilePage = () => {
-  const { profile, updateProfile } = useProfile();
+  const { profile, updateProfile, links } = useProfile();
   const [firstName, setFirstName] = useState(profile.firstName || "");
   const [lastName, setLastName] = useState(profile.lastName || "");
   const [email, setEmail] = useState(profile.email || "");
   const [profilePicture, setProfilePicture] = useState(
     profile.profilePicture || ""
   );
-  const [links, setLinks] = useState<
-    Array<{ id: string; platform: string; url: string }>
-  >([]);
 
   const handleSave = () => {
     updateProfile({ firstName, lastName, email, profilePicture });
@@ -35,21 +33,31 @@ const ProfilePage = () => {
     }
   };
 
+  const isProfileEmpty =
+    !profile.firstName &&
+    !profile.lastName &&
+    !profile.email &&
+    !profile.profilePicture;
+
   return (
-    <div className="container mx-auto p-4 flex gap-8 h-screen">
-      <div className="hidden md:block flex-1 bg-white rounded-2xl p-8">
-        <PhoneFrame>
-          {profile ? <ProfileInfo profile={profile} /> : <ProfileSkeleton />}
-          {links.length === 0 ? (
-            <LinkSkeleton />
-          ) : (
-            <PhoneLinkList links={links} />
-          )}
-        </PhoneFrame>
-      </div>
-      <div className="flex-1 flex flex-col bg-white rounded-2xl p-8">
-        <h1 className="text-3xl font-bold mb-4">Profile Details</h1>
-        <div className="flex flex-col items-center">
+    <div className="container mx-auto p-4">
+      <h1 className="text-3xl font-bold mb-4">Profile Details</h1>
+      <div className="flex flex-col md:flex-row items-center md:items-start">
+        <div className="md:w-1/2 mb-4 md:mb-0 md:mr-4">
+          <PhoneFrame>
+            {isProfileEmpty ? (
+              <ProfileSkeleton />
+            ) : (
+              <ProfileInfo profile={profile} />
+            )}
+            {links.length === 0 ? (
+              <LinkSkeleton />
+            ) : (
+              <PhoneLinkList links={links} />
+            )}
+          </PhoneFrame>
+        </div>
+        <div className="md:w-1/2 flex flex-col items-center">
           <div className="relative mb-4">
             <div className="w-32 h-32 rounded-full overflow-hidden mb-2">
               <Image

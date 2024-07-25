@@ -36,6 +36,7 @@ interface LinkFormProps {
   onRemove: (id: string) => void;
   showError: (id: string, error: string) => void;
   errors: { [key: string]: string };
+  isDuplicate: (url: string) => boolean; // Add this line
 }
 
 const LinkForm: React.FC<LinkFormProps> = ({
@@ -45,6 +46,7 @@ const LinkForm: React.FC<LinkFormProps> = ({
   onRemove,
   showError,
   errors,
+  isDuplicate, // Add this line
 }) => {
   const [customPlatform, setCustomPlatform] = useState(
     link.platform.startsWith("custom:")
@@ -83,6 +85,8 @@ const LinkForm: React.FC<LinkFormProps> = ({
       showError(link.id, "Can't be empty");
     } else if (!isValidUrl(value)) {
       showError(link.id, "Please check the URL");
+    } else if (isDuplicate(value)) {
+      showError(link.id, "Duplicate URL detected");
     } else {
       showError(link.id, "");
     }
@@ -117,9 +121,7 @@ const LinkForm: React.FC<LinkFormProps> = ({
                 link.platform.startsWith("custom:") ? "custom" : link.platform
               }
               onChange={handlePlatformChange}
-              className={`appearance-none bg-white border rounded-md pl-10 pr-8 py-2 w-full focus:outline-none focus:ring-2 focus:ring-purple focus:border-transparent ${
-                errors[link.id] ? "border-red-500" : "border-gray-300"
-              }`}
+              className="appearance-none bg-white border border-gray-300 rounded-md pl-10 pr-8 py-2 w-full focus:outline-none focus:ring-2 focus:ring-purple focus:border-transparent"
             >
               {platforms.map((platform) => (
                 <option
@@ -142,9 +144,7 @@ const LinkForm: React.FC<LinkFormProps> = ({
               value={customPlatform}
               onChange={handleCustomPlatformChange}
               placeholder="e.g. My Blog"
-              className={`bg-white border rounded-md px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-purple focus:border-transparent ${
-                errors[link.id] ? "border-red-500" : "border-gray-300"
-              }`}
+              className="bg-white border border-gray-300 rounded-md px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-purple focus:border-transparent"
               onBlur={() =>
                 onPlatformChange(link.id, `custom:${customPlatform}`)
               }
@@ -160,7 +160,7 @@ const LinkForm: React.FC<LinkFormProps> = ({
           onChange={handleUrlChange}
           placeholder="e.g. https://www.example.com"
           className={`bg-white border rounded-md px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-purple focus:border-transparent ${
-            errors[link.id] ? "border-red" : "border-gray-300"
+            errors[link.id] ? "border-red-500" : "border-gray-300"
           }`}
         />
         {errors[link.id] && (

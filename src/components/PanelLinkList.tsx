@@ -1,20 +1,20 @@
 import React from "react";
 import LinkForm from "./LinkForm";
 
-interface PanelLinkListProps {
+const PanelLinkList: React.FC<{
   links: { id: string; platform: string; url: string }[];
   onPlatformChange: (id: string, platform: string) => void;
   onUrlChange: (id: string, url: string) => void;
   onRemove: (id: string) => void;
+  isDuplicate: (url: string) => boolean; // Add this line
   showError: (id: string, error: string) => void;
   errors: { [key: string]: string };
-}
-
-const PanelLinkList: React.FC<PanelLinkListProps> = ({
+}> = ({
   links,
   onPlatformChange,
   onUrlChange,
   onRemove,
+  isDuplicate, // Add this line
   showError,
   errors,
 }) => {
@@ -27,6 +27,7 @@ const PanelLinkList: React.FC<PanelLinkListProps> = ({
           onPlatformChange={onPlatformChange}
           onUrlChange={onUrlChange}
           onRemove={onRemove}
+          isDuplicate={isDuplicate} // Add this line
           showError={showError}
           errors={errors}
         />

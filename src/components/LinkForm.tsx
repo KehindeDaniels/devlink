@@ -4,6 +4,9 @@ import {
   FiGithub,
   FiYoutube,
   FiLinkedin,
+  FiFacebook,
+  FiTwitter,
+  FiInstagram,
   FiChevronDown,
 } from "react-icons/fi";
 
@@ -11,12 +14,18 @@ const platformIcons: { [key: string]: JSX.Element } = {
   github: <FiGithub />,
   youtube: <FiYoutube />,
   linkedin: <FiLinkedin />,
+  facebook: <FiFacebook />,
+  twitter: <FiTwitter />,
+  instagram: <FiInstagram />,
 };
 
 const platforms = [
   { value: "github", label: "GitHub", icon: <FiGithub /> },
   { value: "youtube", label: "YouTube", icon: <FiYoutube /> },
   { value: "linkedin", label: "LinkedIn", icon: <FiLinkedin /> },
+  { value: "facebook", label: "Facebook", icon: <FiFacebook /> },
+  { value: "twitter", label: "Twitter", icon: <FiTwitter /> },
+  { value: "instagram", label: "Instagram", icon: <FiInstagram /> },
   { value: "custom", label: "Custom", icon: <FiLink /> },
 ];
 
@@ -83,10 +92,14 @@ const LinkForm: React.FC<LinkFormProps> = ({
                 link.platform.startsWith("custom:") ? "custom" : link.platform
               }
               onChange={handlePlatformChange}
-              className="appearance-none bg-white border border-gray-300 rounded-md pl-10 pr-8 py-2 w-full"
+              className="appearance-none bg-white border border-gray-300 rounded-md pl-10 pr-8 py-2 w-full focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500"
             >
               {platforms.map((platform) => (
-                <option key={platform.value} value={platform.value}>
+                <option
+                  key={platform.value}
+                  value={platform.value}
+                  className="flex items-center p-2 hover:bg-gray-100"
+                >
                   {platform.label}
                 </option>
               ))}

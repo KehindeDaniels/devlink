@@ -7,7 +7,11 @@ const PhoneLinkList: React.FC<{
     <div className="flex flex-col space-y-4 w-1/2 mx-auto h-1/2 overflow-auto">
       {links.map((link) => (
         <div key={link.id} className="bg-gray-200 rounded-md p-2">
-          <div className="text-sm font-medium">{link.platform}</div>
+          <div className="text-sm font-medium">
+            {link.platform.startsWith("custom:")
+              ? link.platform.replace("custom:", "")
+              : link.platform}
+          </div>
           <a
             href={link.url}
             target="_blank"

@@ -9,7 +9,7 @@ import ProfileSkeleton from "@/components/ProfileSkeleton";
 import ProfileInfo from "@/components/ProfileInfo";
 import LinkSkeleton from "@/components/LinkSkeleton";
 import Toast from "@/components/Toast";
-import withAuth from "@/components/withAuth"; // Import withAuth HOC
+import withAuth from "@/components/withAuth";
 
 const ProfilePage = () => {
   const { profile, updateProfile, links } = useProfile();
@@ -24,7 +24,7 @@ const ProfilePage = () => {
   const handleSave = () => {
     updateProfile({ firstName, lastName, email, profilePicture });
     setShowToast(true);
-    setTimeout(() => setShowToast(false), 3000); // Hide toast after 3 seconds
+    setTimeout(() => setShowToast(false), 3000);
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -135,4 +135,4 @@ const ProfilePage = () => {
   );
 };
 
-export default withAuth(ProfilePage); // Wrap with withAuth HOC
+export default withAuth(ProfilePage);

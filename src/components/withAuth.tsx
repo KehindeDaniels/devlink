@@ -1,11 +1,11 @@
 // src/components/withAuth.tsx
 import React, { useContext, useEffect } from "react";
 import { useRouter } from "next/router";
-import AuthContext from "@/context/AuthContext"; // Correct import path
+import { useAuth } from "@/context/AuthContext";
 
 const withAuth = (WrappedComponent: React.ComponentType) => {
-  return (props: any) => {
-    const { user, loading } = useContext(AuthContext);
+  const ComponentWithAuth = (props: any) => {
+    const { user, loading } = useAuth();
     const router = useRouter();
 
     useEffect(() => {
@@ -20,6 +20,8 @@ const withAuth = (WrappedComponent: React.ComponentType) => {
 
     return <WrappedComponent {...props} />;
   };
+
+  return ComponentWithAuth;
 };
 
 export default withAuth;

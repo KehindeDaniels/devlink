@@ -2,11 +2,12 @@ import React, { useState } from "react";
 import { useProfile } from "@/context/ProfileContext";
 import Image from "next/image";
 import MainLayout from "@/layouts/MainLayout";
-import PhoneFrame from "@/components/PhoneFrame";
+import PhoneFrame from "@/components/phoneFrame";
 import PhoneLinkList from "@/components/PhoneLinkList";
 import ProfileSkeleton from "@/components/ProfileSkeleton";
 import ProfileInfo from "@/components/ProfileInfo";
 import LinkSkeleton from "@/components/LinkSkeleton";
+import Toast from "@/components/Toast";
 
 const ProfilePage = () => {
   const { profile, updateProfile, links } = useProfile();
@@ -16,9 +17,12 @@ const ProfilePage = () => {
   const [profilePicture, setProfilePicture] = useState(
     profile.profilePicture || ""
   );
+  const [showToast, setShowToast] = useState(false);
 
   const handleSave = () => {
     updateProfile({ firstName, lastName, email, profilePicture });
+    setShowToast(true);
+    setTimeout(() => setShowToast(false), 3000); // Hide toast after 3 seconds
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -104,6 +108,10 @@ const ProfilePage = () => {
           </button>
         </div>
       </div>
+      <Toast
+        message="Your changes have been successfully saved!"
+        show={showToast}
+      />
     </div>
   );
 };

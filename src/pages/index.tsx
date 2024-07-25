@@ -49,54 +49,52 @@ const HomePage = () => {
   };
 
   return (
-    <MainLayout>
-      <div className="container mx-auto p-4 flex gap-8 h-screen">
-        <div className="hidden md:block flex-1 bg-white rounded-2xl p-8">
-          <PhoneFrame>
-            {!isProfileLoaded ? (
-              <ProfileSkeleton />
-            ) : (
-              <>
-                <ProfileInfo profile={profile} />
-                {links.length === 0 ? (
-                  <EmptyStatePhone />
-                ) : (
-                  <PhoneLinkList links={links} />
-                )}
-              </>
-            )}
-          </PhoneFrame>
+    <div className="container mx-auto p-4 flex gap-8 h-screen">
+      <div className="hidden md:block flex-1 bg-white rounded-2xl p-8">
+        <PhoneFrame>
+          {!isProfileLoaded ? (
+            <ProfileSkeleton />
+          ) : (
+            <>
+              <ProfileInfo profile={profile} />
+              {links.length === 0 ? (
+                <EmptyStatePhone />
+              ) : (
+                <PhoneLinkList links={links} />
+              )}
+            </>
+          )}
+        </PhoneFrame>
+      </div>
+      <div className="flex-1 flex flex-col bg-white rounded-2xl p-8">
+        <h1 className="text-3xl font-bold mb-4">Customize your links</h1>
+        <AddLinkButton onClick={addLink} />
+        <div
+          className={`mt-4 ${
+            links.length > 0 ? "h-[532px] overflow-auto" : ""
+          }`}
+        >
+          {links.length === 0 ? (
+            <EmptyStatePanel />
+          ) : (
+            <PanelLinkList
+              links={links}
+              onPlatformChange={updateLinkPlatform}
+              onUrlChange={updateLinkUrl}
+              onRemove={removeLink}
+            />
+          )}
         </div>
-        <div className="flex-1 flex flex-col bg-white rounded-2xl p-8">
-          <h1 className="text-3xl font-bold mb-4">Customize your links</h1>
-          <AddLinkButton onClick={addLink} />
-          <div
-            className={`mt-4 ${
-              links.length > 0 ? "h-[532px] overflow-auto" : ""
-            }`}
+        <div className="flex justify-end mt-4">
+          <button
+            type="button"
+            className="py-2 px-8 bg-purple text-white rounded-md"
           >
-            {links.length === 0 ? (
-              <EmptyStatePanel />
-            ) : (
-              <PanelLinkList
-                links={links}
-                onPlatformChange={updateLinkPlatform}
-                onUrlChange={updateLinkUrl}
-                onRemove={removeLink}
-              />
-            )}
-          </div>
-          <div className="flex justify-end mt-4">
-            <button
-              type="button"
-              className="py-2 px-8 bg-purple text-white rounded-md"
-            >
-              Save
-            </button>
-          </div>
+            Save
+          </button>
         </div>
       </div>
-    </MainLayout>
+    </div>
   );
 };
 

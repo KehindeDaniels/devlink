@@ -30,57 +30,55 @@ const ProfilePage = () => {
   };
 
   return (
-    <MainLayout>
-      <div className="container mx-auto p-4">
-        <h1 className="text-3xl font-bold mb-4">Profile Details</h1>
-        <div className="flex flex-col items-center">
-          <div className="relative mb-4">
-            <div className="w-32 h-32 rounded-full overflow-hidden mb-2">
-              <Image
-                src={profilePicture || "/default-profile.png"}
-                alt="Profile Picture"
-                width={128}
-                height={128}
-                className="object-cover"
-              />
-            </div>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleImageChange}
-              className="absolute inset-0 opacity-0 cursor-pointer"
+    <div className="container mx-auto p-4">
+      <h1 className="text-3xl font-bold mb-4">Profile Details</h1>
+      <div className="flex flex-col items-center">
+        <div className="relative mb-4">
+          <div className="w-32 h-32 rounded-full overflow-hidden mb-2">
+            <Image
+              src={profilePicture || "/default-profile.png"}
+              alt="Profile Picture"
+              width={128}
+              height={128}
+              className="object-cover"
             />
           </div>
           <input
-            type="text"
-            value={firstName}
-            onChange={(e) => setFirstName(e.target.value)}
-            placeholder="First name"
-            className="mb-2 p-2 border rounded w-full"
+            type="file"
+            accept="image/*"
+            onChange={handleImageChange}
+            className="absolute inset-0 opacity-0 cursor-pointer"
           />
-          <input
-            type="text"
-            value={lastName}
-            onChange={(e) => setLastName(e.target.value)}
-            placeholder="Last name"
-            className="mb-2 p-2 border rounded w-full"
-          />
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Email"
-            className="mb-2 p-2 border rounded w-full"
-          />
-          <button
-            onClick={handleSave}
-            className="py-2 px-4 bg-purple-600 text-white rounded-md"
-          >
-            Save
-          </button>
         </div>
+        <input
+          type="text"
+          value={firstName}
+          onChange={(e) => setFirstName(e.target.value)}
+          placeholder="First name"
+          className="mb-2 p-2 border rounded w-full"
+        />
+        <input
+          type="text"
+          value={lastName}
+          onChange={(e) => setLastName(e.target.value)}
+          placeholder="Last name"
+          className="mb-2 p-2 border rounded w-full"
+        />
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Email"
+          className="mb-2 p-2 border rounded w-full"
+        />
+        <button
+          onClick={handleSave}
+          className="py-2 px-4 bg-purple-600 text-white rounded-md"
+        >
+          Save
+        </button>
       </div>
-    </MainLayout>
+    </div>
   );
 };
 

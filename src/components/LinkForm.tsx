@@ -92,13 +92,13 @@ const LinkForm: React.FC<LinkFormProps> = ({
                 link.platform.startsWith("custom:") ? "custom" : link.platform
               }
               onChange={handlePlatformChange}
-              className="appearance-none bg-white border border-gray-300 rounded-md pl-10 pr-8 py-2 w-full focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500"
+              className="appearance-none bg-white border border-gray-300 rounded-md pl-10 pr-8 py-2 w-full focus:outline-none focus:ring-2 focus:ring-purple focus:border-transparent"
             >
               {platforms.map((platform) => (
                 <option
                   key={platform.value}
                   value={platform.value}
-                  className="flex items-center p-2 hover:bg-gray-100"
+                  className="flex items-center"
                 >
                   {platform.label}
                 </option>
@@ -115,7 +115,7 @@ const LinkForm: React.FC<LinkFormProps> = ({
               value={customPlatform}
               onChange={handleCustomPlatformChange}
               placeholder="e.g. My Blog"
-              className="bg-white border border-gray-300 rounded-md px-3 py-2 w-full"
+              className="bg-white border border-gray-300 rounded-md px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-purple focus:border-transparent"
             />
           </div>
         )}
@@ -127,7 +127,7 @@ const LinkForm: React.FC<LinkFormProps> = ({
           value={link.url}
           onChange={(e) => onUrlChange(link.id, e.target.value)}
           placeholder="e.g. https://www.example.com"
-          className="bg-white border border-gray-300 rounded-md px-3 py-2 w-full"
+          className="bg-white border border-gray-300 rounded-md px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-purple focus:border-transparent"
         />
       </div>
     </div>

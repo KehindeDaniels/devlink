@@ -1,7 +1,7 @@
 // src/pages/index.tsx
-import React, { useState } from "react";
+import React from "react";
 import AddLinkButton from "@/components/AddLinkButton";
-import PhoneFrame from "@/components/phoneFrame";
+import PhoneFrame from "@/components/PhoneFrame";
 import PanelLinkList from "@/components/PanelLinkList";
 import PhoneLinkList from "@/components/PhoneLinkList";
 import EmptyStatePanel from "@/components/EmptyStatePanel";
@@ -11,10 +11,7 @@ import LinkSkeleton from "@/components/LinkSkeleton";
 import { useProfile } from "@/context/ProfileContext";
 
 const HomePage = () => {
-  const [links, setLinks] = useState<
-    Array<{ id: string; platform: string; url: string }>
-  >([]);
-  const { profile } = useProfile();
+  const { profile, links, addLink, updateLink, removeLink } = useProfile();
 
   const isProfileEmpty =
     !profile.firstName &&
@@ -22,27 +19,13 @@ const HomePage = () => {
     !profile.email &&
     !profile.profilePicture;
 
-  const addLink = () => {
+  const handleAddLink = () => {
     const newLink = {
       id: (links.length + 1).toString(),
       platform: "github",
       url: "",
     };
-    setLinks([...links, newLink]);
-  };
-
-  const updateLinkPlatform = (id: string, platform: string) => {
-    setLinks(
-      links.map((link) => (link.id === id ? { ...link, platform } : link))
-    );
-  };
-
-  const updateLinkUrl = (id: string, url: string) => {
-    setLinks(links.map((link) => (link.id === id ? { ...link, url } : link)));
-  };
-
-  const removeLink = (id: string) => {
-    setLinks(links.filter((link) => link.id !== id));
+    addLink(newLink);
   };
 
   return (
@@ -63,7 +46,7 @@ const HomePage = () => {
       </div>
       <div className="flex-1 flex flex-col bg-white rounded-2xl p-8">
         <h1 className="text-3xl font-bold mb-4">Customize your links</h1>
-        <AddLinkButton onClick={addLink} />
+        <AddLinkButton onClick={handleAddLink} />
         <div
           className={`mt-4 ${
             links.length > 0 ? "h-[532px] overflow-auto" : ""
@@ -74,8 +57,8 @@ const HomePage = () => {
           ) : (
             <PanelLinkList
               links={links}
-              onPlatformChange={updateLinkPlatform}
-              onUrlChange={updateLinkUrl}
+              onPlatformChange={updateLink}
+              onUrlChange={updateLink}
               onRemove={removeLink}
             />
           )}

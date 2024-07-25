@@ -18,7 +18,7 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({ profile }) => {
   const placeholderEmail = "youremail@example.com";
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center mt-16 mb-16">
       {profile.profilePicture ? (
         <img
           src={profile.profilePicture}

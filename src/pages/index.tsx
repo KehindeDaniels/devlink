@@ -1,14 +1,13 @@
 // src/pages/index.tsx
-import React, { useState, useEffect } from "react";
-import MainLayout from "@/layouts/MainLayout";
+import React, { useState } from "react";
 import AddLinkButton from "@/components/AddLinkButton";
 import PhoneFrame from "@/components/PhoneFrame";
-import EmptyStatePhone from "@/components/EmptyStatePhone";
 import PanelLinkList from "@/components/PanelLinkList";
 import PhoneLinkList from "@/components/PhoneLinkList";
 import EmptyStatePanel from "@/components/EmptyStatePanel";
 import ProfileSkeleton from "@/components/ProfileSkeleton";
 import ProfileInfo from "@/components/ProfileInfo";
+import LinkSkeleton from "@/components/LinkSkeleton";
 import { useProfile } from "@/context/ProfileContext";
 
 const HomePage = () => {
@@ -16,14 +15,12 @@ const HomePage = () => {
     Array<{ id: string; platform: string; url: string }>
   >([]);
   const { profile } = useProfile();
-  const [isProfileLoaded, setIsProfileLoaded] = useState(false);
 
-  useEffect(() => {
-    // Simulate a delay to load profile data
-    setTimeout(() => {
-      setIsProfileLoaded(true);
-    }, 2000); // Adjust the timeout as needed
-  }, []);
+  const isProfileEmpty =
+    !profile.firstName &&
+    !profile.lastName &&
+    !profile.email &&
+    !profile.profilePicture;
 
   const addLink = () => {
     const newLink = {
@@ -52,17 +49,15 @@ const HomePage = () => {
     <div className="container mx-auto p-4 flex gap-8 h-screen">
       <div className="hidden md:block flex-1 bg-white rounded-2xl p-8">
         <PhoneFrame>
-          {!isProfileLoaded ? (
+          {isProfileEmpty ? (
             <ProfileSkeleton />
           ) : (
-            <>
-              <ProfileInfo profile={profile} />
-              {links.length === 0 ? (
-                <EmptyStatePhone />
-              ) : (
-                <PhoneLinkList links={links} />
-              )}
-            </>
+            <ProfileInfo profile={profile} />
+          )}
+          {links.length === 0 ? (
+            <LinkSkeleton />
+          ) : (
+            <PhoneLinkList links={links} />
           )}
         </PhoneFrame>
       </div>

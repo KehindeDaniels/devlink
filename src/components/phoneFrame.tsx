@@ -21,7 +21,7 @@ const PhoneFrame: React.FC<{ children: React.ReactNode }> = ({ children }) => {
           stroke="#737373"
         />
       </svg>
-      <div className="phone-content absolute inset-0 w-full h-full p-4 flex flex-col justify-center items-center">
+      <div className="phone-content absolute inset-0 flex flex-col justify-start items-center mt-16">
         {children}
       </div>
     </div>

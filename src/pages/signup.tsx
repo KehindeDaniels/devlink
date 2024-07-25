@@ -19,8 +19,8 @@ const SignUpPage: React.FC = () => {
     try {
       await createUserWithEmailAndPassword(auth, email, password);
       router.push("/profile");
-    } catch (err) {
-      setError("Failed to create an account. Please try again.");
+    } catch (err: any) {
+      setError(err.message || "Failed to create an account. Please try again.");
     }
   };
 

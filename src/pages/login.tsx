@@ -14,8 +14,10 @@ const LoginPage: React.FC = () => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
       router.push("/profile");
-    } catch (err) {
-      setError("Failed to log in. Please check your email and password.");
+    } catch (err: any) {
+      setError(
+        err.message || "Failed to log in. Please check your email and password."
+      );
     }
   };
 
@@ -50,7 +52,7 @@ const LoginPage: React.FC = () => {
               required
             />
           </div>
-          {error && <p className="text-red-500 text-xs italic mb-4">{error}</p>}
+          {error && <p className="text-red text-xs italic mb-4">{error}</p>}
           <div className="flex items-center justify-between">
             <button
               type="submit"

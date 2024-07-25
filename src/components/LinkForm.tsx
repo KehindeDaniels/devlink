@@ -1,4 +1,3 @@
-// src/components/LinkForm.tsx
 import React, { useState } from "react";
 import {
   FiLink,
@@ -34,12 +33,15 @@ const LinkForm: React.FC<LinkFormProps> = ({
   onUrlChange,
   onRemove,
 }) => {
-  const [customPlatform, setCustomPlatform] = useState("");
+  const [customPlatform, setCustomPlatform] = useState(
+    link.platform === "custom" ? link.platform : ""
+  );
 
   const handlePlatformChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const { value } = e.target;
     if (value === "custom") {
-      onPlatformChange(link.id, customPlatform || value);
+      setCustomPlatform("");
+      onPlatformChange(link.id, "custom");
     } else {
       onPlatformChange(link.id, value);
     }
@@ -50,7 +52,10 @@ const LinkForm: React.FC<LinkFormProps> = ({
   ) => {
     const { value } = e.target;
     setCustomPlatform(value);
-    onPlatformChange(link.id, value);
+  };
+
+  const handleCustomPlatformBlur = () => {
+    onPlatformChange(link.id, customPlatform);
   };
 
   return (
@@ -89,6 +94,7 @@ const LinkForm: React.FC<LinkFormProps> = ({
               type="text"
               value={customPlatform}
               onChange={handleCustomPlatformChange}
+              onBlur={handleCustomPlatformBlur}
               placeholder="e.g. My Blog"
               className="bg-white border border-gray-300 rounded-md px-3 py-2 w-full"
             />

@@ -27,13 +27,17 @@ const HomePage = () => {
     !profile.email &&
     !profile.profilePicture;
 
-  const handleAddLink = () => {
+  const handleAddLink = async () => {
     const newLink = {
       id: (links.length + 1).toString(),
       platform: "github",
       url: "",
     };
-    addLink(newLink);
+    try {
+      await addLink(newLink);
+    } catch (error) {
+      console.error("Error adding link: ", error);
+    }
   };
 
   const handleUpdateLinkPlatform = (id: string, platform: string) => {

@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { onAuthStateChanged } from "firebase/auth";
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { auth, firestore } from "../config/firebaseConfig";
 
 interface Profile {
@@ -10,11 +10,21 @@ interface Profile {
   profilePicture: string;
 }
 
+interface Link {
+  id: string;
+  platform: string;
+  url: string;
+}
+
 interface ProfileContextType {
   profile: Profile;
   updateProfile: (profile: Profile) => void;
-  links: { id: string; platform: string; url: string }[];
-  setLinks: (links: { id: string; platform: string; url: string }[]) => void;
+  links: Link[];
+  setLinks: (links: Link[]) => void;
+  addLink: (link: Link) => Promise<void>;
+  updateLinkPlatform: (id: string, platform: string) => void;
+  updateLinkUrl: (id: string, url: string) => void;
+  removeLink: (id: string) => void;
 }
 
 const ProfileContext = createContext<ProfileContextType | undefined>(undefined);
@@ -36,9 +46,7 @@ export const ProfileProvider: React.FC<{ children: React.ReactNode }> = ({
     email: "",
     profilePicture: "",
   });
-  const [links, setLinks] = useState<
-    { id: string; platform: string; url: string }[]
-  >([]);
+  const [links, setLinks] = useState<Link[]>([]);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -46,6 +54,11 @@ export const ProfileProvider: React.FC<{ children: React.ReactNode }> = ({
         const profileDoc = await getDoc(doc(firestore, "users", user.uid));
         if (profileDoc.exists()) {
           setProfile(profileDoc.data() as Profile);
+        }
+
+        const linksDoc = await getDoc(doc(firestore, "links", user.uid));
+        if (linksDoc.exists()) {
+          setLinks(linksDoc.data().links);
         }
       }
     });
@@ -62,9 +75,63 @@ export const ProfileProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
+  const addLink = async (newLink: Link) => {
+    if (auth.currentUser) {
+      const linksRef = doc(firestore, "links", auth.currentUser.uid);
+      const linksDoc = await getDoc(linksRef);
+
+      if (linksDoc.exists()) {
+        const existingLinks = linksDoc.data().links as Link[];
+        const updatedLinks = [...existingLinks, newLink];
+        await updateDoc(linksRef, { links: updatedLinks });
+        setLinks(updatedLinks);
+      } else {
+        await setDoc(linksRef, { links: [newLink] });
+        setLinks([newLink]);
+      }
+    }
+  };
+
+  const updateLinkPlatform = (id: string, platform: string) => {
+    const updatedLinks = links.map((link) =>
+      link.id === id ? { ...link, platform } : link
+    );
+    setLinks(updatedLinks);
+  };
+
+  const updateLinkUrl = (id: string, url: string) => {
+    const updatedLinks = links.map((link) =>
+      link.id === id ? { ...link, url } : link
+    );
+    setLinks(updatedLinks);
+  };
+
+  const removeLink = async (id: string) => {
+    if (auth.currentUser) {
+      const linksRef = doc(firestore, "links", auth.currentUser.uid);
+      const linksDoc = await getDoc(linksRef);
+
+      if (linksDoc.exists()) {
+        const existingLinks = linksDoc.data().links as Link[];
+        const updatedLinks = existingLinks.filter((link) => link.id !== id);
+        await updateDoc(linksRef, { links: updatedLinks });
+        setLinks(updatedLinks);
+      }
+    }
+  };
+
   return (
     <ProfileContext.Provider
-      value={{ profile, updateProfile, links, setLinks }}
+      value={{
+        profile,
+        updateProfile,
+        links,
+        setLinks,
+        addLink,
+        updateLinkPlatform,
+        updateLinkUrl,
+        removeLink,
+      }}
     >
       {children}
     </ProfileContext.Provider>

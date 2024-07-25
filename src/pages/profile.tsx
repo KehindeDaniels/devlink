@@ -1,3 +1,4 @@
+// src/pages/profile.tsx
 import React, { useState } from "react";
 import { useProfile } from "@/context/ProfileContext";
 import Image from "next/image";
@@ -8,6 +9,7 @@ import ProfileSkeleton from "@/components/ProfileSkeleton";
 import ProfileInfo from "@/components/ProfileInfo";
 import LinkSkeleton from "@/components/LinkSkeleton";
 import Toast from "@/components/Toast";
+import withAuth from "@/components/withAuth"; // Import withAuth HOC
 
 const ProfilePage = () => {
   const { profile, updateProfile, links } = useProfile();
@@ -133,4 +135,4 @@ const ProfilePage = () => {
   );
 };
 
-export default ProfilePage;
+export default withAuth(ProfilePage); // Wrap with withAuth HOC

@@ -1,26 +1,21 @@
 import React, { useState } from "react";
 import { useRouter } from "next/router";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../config/firebaseConfig"; // Update the import path as needed
+import { signInWithPopup } from "firebase/auth";
+import { auth, googleProvider } from "../config/firebaseConfig"; // Updated import
+import { FcGoogle } from "react-icons/fc";
 
 const SignUpPage: React.FC = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const router = useRouter();
 
-  const handleSignUp = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (password !== confirmPassword) {
-      setError("Passwords do not match.");
-      return;
-    }
+  const handleGoogleSignUp = async () => {
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
+      await signInWithPopup(auth, googleProvider);
       router.push("/profile");
     } catch (err: any) {
-      setError(err.message || "Failed to create an account. Please try again.");
+      setError(
+        err.message || "Failed to sign up with Google. Please try again."
+      );
     }
   };
 
@@ -28,18 +23,16 @@ const SignUpPage: React.FC = () => {
     <div className="min-h-screen flex flex-col justify-center items-center bg-gray-100">
       <div className="max-w-md w-full bg-white shadow-md rounded-lg p-8">
         <h2 className="text-2xl font-bold text-center mb-6">Create account</h2>
-        <form onSubmit={handleSignUp}>
+        <form>
           <div className="mb-4">
             <label className="block text-gray-700 text-sm font-bold mb-2">
               Email address
             </label>
             <input
               type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              placeholder="e.g. alex@email.com"
-              required
+              placeholder="We are sorry, login with email is unavailable at the moment"
+              disabled
             />
           </div>
           <div className="mb-4">
@@ -48,11 +41,9 @@ const SignUpPage: React.FC = () => {
             </label>
             <input
               type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              placeholder="At least 8 characters"
-              required
+              placeholder="Please use your Google account to sign up"
+              disabled
             />
           </div>
           <div className="mb-6">
@@ -61,20 +52,20 @@ const SignUpPage: React.FC = () => {
             </label>
             <input
               type="password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              placeholder="At least 8 characters"
-              required
+              placeholder="Sign up with Google for a seamless experience"
+              disabled
             />
           </div>
           {error && <p className="text-red-500 text-xs italic mb-4">{error}</p>}
           <div className="flex items-center justify-between">
             <button
-              type="submit"
-              className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              type="button"
+              onClick={handleGoogleSignUp}
+              className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline flex items-center justify-center w-full"
             >
-              Create new account
+              <FcGoogle className="mr-2" />
+              Sign up with Google
             </button>
           </div>
         </form>

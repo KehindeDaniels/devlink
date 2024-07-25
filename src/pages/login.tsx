@@ -1,22 +1,20 @@
 import React, { useState } from "react";
 import { useRouter } from "next/router";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../config/firebaseConfig"; // Update the import path as needed
+import { signInWithPopup } from "firebase/auth";
+import { auth, googleProvider } from "../config/firebaseConfig"; // Updated import
+import { FcGoogle } from "react-icons/fc";
 
 const LoginPage: React.FC = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const router = useRouter();
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleGoogleLogin = async () => {
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      await signInWithPopup(auth, googleProvider);
       router.push("/profile");
     } catch (err: any) {
       setError(
-        err.message || "Failed to log in. Please check your email and password."
+        err.message || "Failed to log in with Google. Please try again."
       );
     }
   };
@@ -25,18 +23,16 @@ const LoginPage: React.FC = () => {
     <div className="min-h-screen flex flex-col justify-center items-center bg-gray-100">
       <div className="max-w-md w-full bg-white shadow-md rounded-lg p-8">
         <h2 className="text-2xl font-bold text-center mb-6">Login</h2>
-        <form onSubmit={handleLogin}>
+        <form>
           <div className="mb-4">
             <label className="block text-gray-700 text-sm font-bold mb-2">
               Email address
             </label>
             <input
               type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              placeholder="ben@example.com"
-              required
+              placeholder="We are sorry, login with email is unavailable at the moment"
+              disabled
             />
           </div>
           <div className="mb-6">
@@ -45,20 +41,20 @@ const LoginPage: React.FC = () => {
             </label>
             <input
               type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-              placeholder="Enter your password"
-              required
+              placeholder="Please use your Google account to log in"
+              disabled
             />
           </div>
-          {error && <p className="text-red text-xs italic mb-4">{error}</p>}
+          {error && <p className="text-red-500 text-xs italic mb-4">{error}</p>}
           <div className="flex items-center justify-between">
             <button
-              type="submit"
-              className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              type="button"
+              onClick={handleGoogleLogin}
+              className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline flex items-center justify-center w-full"
             >
-              Login
+              <FcGoogle className="mr-2" />
+              Log in with Google
             </button>
           </div>
         </form>

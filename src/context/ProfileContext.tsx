@@ -1,6 +1,8 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
+import { onAuthStateChanged } from "firebase/auth";
+import { doc, getDoc, setDoc } from "firebase/firestore";
+import { auth, firestore } from "../config/firebaseConfig";
 
-// Define the shape of the profile data
 interface Profile {
   firstName: string;
   lastName: string;
@@ -8,20 +10,11 @@ interface Profile {
   profilePicture: string;
 }
 
-interface Link {
-  id: string;
-  platform: string;
-  url: string;
-}
-
 interface ProfileContextType {
   profile: Profile;
-  updateProfile: (profile: Partial<Profile>) => void;
-  links: Link[];
-  addLink: (link: Link) => void;
-  updateLinkPlatform: (id: string, platform: string) => void;
-  updateLinkUrl: (id: string, url: string) => void;
-  removeLink: (id: string) => void;
+  updateProfile: (profile: Profile) => void;
+  links: { id: string; platform: string; url: string }[];
+  setLinks: (links: { id: string; platform: string; url: string }[]) => void;
 }
 
 const ProfileContext = createContext<ProfileContextType | undefined>(undefined);
@@ -43,44 +36,35 @@ export const ProfileProvider: React.FC<{ children: React.ReactNode }> = ({
     email: "",
     profilePicture: "",
   });
+  const [links, setLinks] = useState<
+    { id: string; platform: string; url: string }[]
+  >([]);
 
-  const [links, setLinks] = useState<Link[]>([]);
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        const profileDoc = await getDoc(doc(firestore, "users", user.uid));
+        if (profileDoc.exists()) {
+          setProfile(profileDoc.data() as Profile);
+        }
+      }
+    });
+    return () => unsubscribe();
+  }, []);
 
-  const updateProfile = (updatedProfile: Partial<Profile>) => {
-    setProfile((prevProfile) => ({ ...prevProfile, ...updatedProfile }));
-  };
-
-  const addLink = (link: Link) => {
-    setLinks((prevLinks) => [...prevLinks, link]);
-  };
-
-  const updateLinkPlatform = (id: string, platform: string) => {
-    setLinks((prevLinks) =>
-      prevLinks.map((link) => (link.id === id ? { ...link, platform } : link))
-    );
-  };
-
-  const updateLinkUrl = (id: string, url: string) => {
-    setLinks((prevLinks) =>
-      prevLinks.map((link) => (link.id === id ? { ...link, url } : link))
-    );
-  };
-
-  const removeLink = (id: string) => {
-    setLinks((prevLinks) => prevLinks.filter((link) => link.id !== id));
+  const updateProfile = async (updatedProfile: Profile) => {
+    if (auth.currentUser) {
+      await setDoc(
+        doc(firestore, "users", auth.currentUser.uid),
+        updatedProfile
+      );
+      setProfile(updatedProfile);
+    }
   };
 
   return (
     <ProfileContext.Provider
-      value={{
-        profile,
-        updateProfile,
-        links,
-        addLink,
-        updateLinkPlatform,
-        updateLinkUrl,
-        removeLink,
-      }}
+      value={{ profile, updateProfile, links, setLinks }}
     >
       {children}
     </ProfileContext.Provider>

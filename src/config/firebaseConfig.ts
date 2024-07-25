@@ -1,6 +1,5 @@
-// src/config/firebaseConfig.ts
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
+import { getAuth, GoogleAuthProvider } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
@@ -18,6 +17,8 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const firestore = getFirestore(app);
 
+const googleProvider = new GoogleAuthProvider();
+
 // Conditionally import and initialize analytics
 if (typeof window !== "undefined") {
   import("firebase/analytics")
@@ -29,4 +30,4 @@ if (typeof window !== "undefined") {
     });
 }
 
-export { app, auth, firestore };
+export { app, auth, firestore, googleProvider };

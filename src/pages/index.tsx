@@ -1,4 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import { useProfile } from "@/context/ProfileContext";
+import { useAuth } from "@/hooks/useAuth";
+
+import MainLayout from "@/layouts/MainLayout";
 import AddLinkButton from "@/components/AddLinkButton";
 import PhoneFrame from "@/components/phoneFrame";
 import PanelLinkList from "@/components/PanelLinkList";
@@ -7,8 +12,6 @@ import EmptyStatePanel from "@/components/EmptyStatePanel";
 import ProfileSkeleton from "@/components/ProfileSkeleton";
 import ProfileInfo from "@/components/ProfileInfo";
 import LinkSkeleton from "@/components/LinkSkeleton";
-import { useProfile } from "@/context/ProfileContext";
-import MainLayout from "@/layouts/MainLayout";
 
 const HomePage = () => {
   const {
@@ -19,7 +22,23 @@ const HomePage = () => {
     updateLinkUrl,
     removeLink,
   } = useProfile();
+  const { user, loading } = useAuth();
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push("/login");
+    }
+  }, [user, loading, router]);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!user) {
+    return null;
+  }
 
   const isProfileEmpty =
     !profile.firstName &&

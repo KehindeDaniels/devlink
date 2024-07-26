@@ -15,7 +15,7 @@ const SignUpPage: React.FC = () => {
   const handleGoogleSignIn = async () => {
     try {
       await signInWithPopup(auth, googleProvider);
-      router.push("/profile");
+      router.push("/");
     } catch (err: any) {
       setError(
         err.message || "Failed to sign in with Google. Please try again."
@@ -31,7 +31,7 @@ const SignUpPage: React.FC = () => {
     }
     try {
       await createUserWithEmailAndPassword(auth, email, password);
-      router.push("/profile");
+      router.push("/");
     } catch (err: any) {
       setError(err.message || "Failed to create an account. Please try again.");
     }

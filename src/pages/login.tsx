@@ -14,7 +14,7 @@ const LoginPage: React.FC = () => {
   const handleGoogleSignIn = async () => {
     try {
       await signInWithPopup(auth, googleProvider);
-      router.push("/profile");
+      router.push("/");
     } catch (err: any) {
       setError(
         err.message || "Failed to sign in with Google. Please try again."
@@ -26,7 +26,7 @@ const LoginPage: React.FC = () => {
     e.preventDefault();
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      router.push("/profile");
+      router.push("/");
     } catch (err: any) {
       setError(
         err.message || "Failed to log in. Please check your email and password."
